@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const { connect } = require('mongoose');
 const Product = require('./Models/product');
 
@@ -19,6 +20,7 @@ connect(
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 //Create product
 app.post('/products', async (req, res) => {
@@ -37,6 +39,14 @@ app.post('/products', async (req, res) => {
   } catch (error) {
     res.status(500).json({error: error.message});
   }
+});
+
+// Display all products
+app.get('/products', async (req,res)=> {
+
+  const products = await Product.find();
+  res.json(products);
+
 });
 
 app.listen(process.env.PORT, () => {
